@@ -20,4 +20,8 @@
     <ProjectReference Include="..\DataVisualization.Service\DataVisualization.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="images\" />
+  </ItemGroup>
+
 </Project>
