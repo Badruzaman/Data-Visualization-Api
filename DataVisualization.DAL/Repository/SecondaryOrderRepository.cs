@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using AutoMapper;
 using DataVisualization.Domain.DTOs;
+using System.Security.Cryptography;
 
 namespace DataVisualization.DAL.Repository
 {
@@ -16,12 +17,14 @@ namespace DataVisualization.DAL.Repository
         private readonly IMapper _mapper;
 
         private readonly IMongoCollection<SecondaryOrder> secondaryOrderCollection;
+        dynamic primary = null;
         public SecondaryOrderRepository(SqlDbContext Context, IOptions<MongoDbSetting> NoSqlDbSetting, IMapper mapper)
         {
             this._Context = Context;
             var mongoClient = new MongoClient(NoSqlDbSetting.Value.ConnectionString);
             var mongoDatabase = mongoClient.GetDatabase(NoSqlDbSetting.Value.DatabaseName);
             secondaryOrderCollection = mongoDatabase.GetCollection<SecondaryOrder>("SecondaryOrder");
+            primary = mongoDatabase.GetCollection<dynamic>("DynSecondaryOrder");
             _mapper = mapper;
         }
         public async Task<bool> MigrateSqlToNoSql()
@@ -50,12 +53,9 @@ namespace DataVisualization.DAL.Repository
                                           Product_Id = _it.Product_Id,
                                           Name = _it.Name,
                                           Qty = _it.Qty
-                                      }).ToList()
+                                      })
                                   };
-                foreach (var secondaryOrder in groupedData)
-                {
-                    secondaryOrderCollection.InsertOneAsync(secondaryOrder);
-                }
+                await secondaryOrderCollection.InsertManyAsync(groupedData);
                 return true;
             }
             catch (Exception ex)
@@ -63,7 +63,7 @@ namespace DataVisualization.DAL.Repository
                 return false;
             }
         }
-      
+
         public async Task<SecondaryOrder> Add(SecondaryOrder secondaryOrder)
         {
             try
@@ -80,7 +80,36 @@ namespace DataVisualization.DAL.Repository
         {
             try
             {
-                return await secondaryOrderCollection.Find(_ => true).ToListAsync();
+                //var filter = Builders<SecondaryOrder>.Filter.Empty;
+                //var projection = Builders<SecondaryOrder>.Projection.Include("SecondaryOrderDetails.Product_Id");
+                //var distinctProducts = await secondaryOrderCollection.DistinctAsync<string>("SecondaryOrderDetails.Product_Id", filter, options: new DistinctOptions { Projection = projection });
+                //var DetailsList = new List<SecondaryOrderDetail>();
+                var result = await secondaryOrderCollection.Find(_ => true).ToListAsync();
+
+                //var filter = Builders<SecondaryOrder>.Filter.Empty;
+                //var projection = Builders<SecondaryOrder>.Projection.Include(o => o.SecondaryOrderDetails);
+
+                // Retrieve only the nested details
+                //var Details = await secondaryOrderCollection.Find(filter).Project<SecondaryOrder>(projection).ToListAsync();
+                //foreach (var item in result)
+                //{
+                //    DetailsList.AddRange(item.SecondaryOrderDetails);
+                //}
+                //var grouped = (from it in Details.
+                //               group it by new
+                //               {
+                //                   it.Product_Id,
+                //                   it.Name
+                //               }
+                //              into g
+                //               select new SecondaryOrderDetail
+                //               {
+                //                   Product_Id = g.Key.Product_Id,
+                //                   Name = g.Key.Name,
+                //                   Qty = g.Sum(x => x.Qty)
+                //               }).ToList();
+                //return grouped;
+                return result;
             }
             catch (Exception ex)
             {
