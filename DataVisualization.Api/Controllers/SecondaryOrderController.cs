@@ -29,7 +29,7 @@ namespace DataVisualization.Api.Controllers
             return result;
         }
         [HttpGet("GetAll")]
-        public async Task<List<SecondaryOrder>> GetAll()
+        public async Task<List<SecondaryOrderCollections>> GetAll()
         {
             var result = await _secondaryOrderService.GetAll();
             return result;

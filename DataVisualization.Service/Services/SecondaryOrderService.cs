@@ -24,7 +24,7 @@ namespace DataVisualization.Service.Services
         {
             return await _secondaryOrderRepository.Add(secondaryOrder);
         }
-        public async Task<List<SecondaryOrder>> GetAll()
+        public async Task<List<SecondaryOrderCollections>> GetAll()
         {
             return await _secondaryOrderRepository.GetAll();
         }

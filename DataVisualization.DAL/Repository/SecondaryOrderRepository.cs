@@ -5,27 +5,21 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using AutoMapper;
+using MongoDB.Bson;
+using MongoDB.Driver.Linq;
+using System.Linq;
 using DataVisualization.Domain.DTOs;
-using System.Security.Cryptography;
 
 namespace DataVisualization.DAL.Repository
 {
     public class SecondaryOrderRepository : ISecondaryOrderRepository
     {
-        private readonly SqlDbContext _Context;
-        private readonly IMapper _mapper;
-
-        private readonly IMongoCollection<SecondaryOrder> secondaryOrderCollection;
-        dynamic primary = null;
-        public SecondaryOrderRepository(SqlDbContext Context, IOptions<MongoDbSetting> NoSqlDbSetting, IMapper mapper)
+        private readonly SqlDbContext _dbContext;
+        private readonly IMongoCollection<SecondaryOrderCollections> _secondaryOrderCollections;
+        public SecondaryOrderRepository(SqlDbContext dbContext, MongoDbContext mongoDbContext)
         {
-            this._Context = Context;
-            var mongoClient = new MongoClient(NoSqlDbSetting.Value.ConnectionString);
-            var mongoDatabase = mongoClient.GetDatabase(NoSqlDbSetting.Value.DatabaseName);
-            secondaryOrderCollection = mongoDatabase.GetCollection<SecondaryOrder>("SecondaryOrder");
-            primary = mongoDatabase.GetCollection<dynamic>("DynSecondaryOrder");
-            _mapper = mapper;
+            this._dbContext = dbContext;
+            this._secondaryOrderCollections = mongoDbContext.GetCollection<SecondaryOrderCollections>("SecondaryOrderCollections");
         }
         public async Task<bool> MigrateSqlToNoSql()
         {
@@ -36,26 +30,26 @@ namespace DataVisualization.DAL.Repository
                 //var result = await _Context.Set<SecondaryOrder>().FromSqlRaw(sql).ToListAsync();
 
                 //Raw Stored Procedure
-                var result = await _Context.SecondaryOrderDto.FromSqlRaw("SprGetSecondaryOrder @param1, @param2", new SqlParameter("@param1", 1), new SqlParameter("@param2", 2)).AsNoTracking().ToListAsync();
-                var groupedData = from it in result
-                                  group it
-                                  by new
-                                  {
-                                      it.Code,
-                                      it.OrderDate
-                                  } into g
-                                  select new SecondaryOrder
-                                  {
-                                      Code = g.Key.Code,
-                                      OrderDate = g.Key.OrderDate,
-                                      SecondaryOrderDetails = g.Select(_it => new SecondaryOrderDetail
-                                      {
-                                          Product_Id = _it.Product_Id,
-                                          Name = _it.Name,
-                                          Qty = _it.Qty
-                                      })
-                                  };
-                await secondaryOrderCollection.InsertManyAsync(groupedData);
+                var result = await _dbContext.SecondaryOrderCollections.FromSqlRaw("SprGetSecondaryOrder @param1, @param2", new SqlParameter("@param1", 1), new SqlParameter("@param2", 2)).AsNoTracking().ToListAsync();
+                //var groupedData = from it in result
+                //                  group it
+                //                  by new
+                //                  {
+                //                      it.Code,
+                //                      it.OrderDate
+                //                  } into g
+                //                  select new SecondaryOrder
+                //                  {
+                //                      Code = g.Key.Code,
+                //                      OrderDate = g.Key.OrderDate,
+                //                      SecondaryOrderDetails = g.Select(_it => new SecondaryOrderDetail
+                //                      {
+                //                          Product_Id = _it.Product_Id,
+                //                          Name = _it.Name,
+                //                          Qty = _it.Qty
+                //                      })
+                //                  };
+                await _secondaryOrderCollections.InsertManyAsync(result);
                 return true;
             }
             catch (Exception ex)
@@ -68,7 +62,7 @@ namespace DataVisualization.DAL.Repository
         {
             try
             {
-                await secondaryOrderCollection.InsertOneAsync(secondaryOrder);
+                //await SecondaryOrderCollection.InsertOneAsync(secondaryOrder);
                 return secondaryOrder;
             }
             catch (Exception ex)
@@ -76,18 +70,42 @@ namespace DataVisualization.DAL.Repository
                 throw;
             }
         }
-        public async Task<List<SecondaryOrder>> GetAll()
+        public async Task<List<SecondaryOrderCollections>> GetAll()
         {
             try
             {
+                //var output = new List<SecondaryOrderDetailDto>();
+                //var coll = _mongoDb.GetCollection<BsonDocument>("SecondaryOrder");
+                //var filter = Builders<BsonDocument>.Filter.Eq("SecondaryOrderDetails.Product_Id", "46474");
+                //var query = coll.Find(filter);
+                //foreach (var res in query.ToList())
+                //{
+                //    output.Add(new SecondaryOrderDetailDto { Product_Id = res.pr});
+                //}
+
                 //var filter = Builders<SecondaryOrder>.Filter.Empty;
                 //var projection = Builders<SecondaryOrder>.Projection.Include("SecondaryOrderDetails.Product_Id");
                 //var distinctProducts = await secondaryOrderCollection.DistinctAsync<string>("SecondaryOrderDetails.Product_Id", filter, options: new DistinctOptions { Projection = projection });
                 //var DetailsList = new List<SecondaryOrderDetail>();
-                var result = await secondaryOrderCollection.Find(_ => true).ToListAsync();
 
+                //var results = from secondary in SecondaryOrderCollection.AsQueryable() where secondary.SecondaryOrderDetails.Where(it => it.Product_Id == 46474) select new { secondary.Title, secondary.Plot };
+                //                BsonDocument filter = new BsonDocument{
+                //    {
+                //        "SecondaryOrderDetails.Product_Id", new BsonDocument{
+                //            { "$gt", 1980 },
+                //            { "$lt", 1990 }
+                //        }
+                //    }
+                //};
+                //                //var filter = Builders<BsonDocument>.Filter.Eq("SecondaryOrderDetails.Product_Id", "46474");
+                //                var documents = await SecondaryOrderCollection.Find(filter).ToListAsync();
+
+                //while (cursor.hasNext())
+                //{
+                //    var print = (cursor.next());
+                //}
                 //var filter = Builders<SecondaryOrder>.Filter.Empty;
-                //var projection = Builders<SecondaryOrder>.Projection.Include(o => o.SecondaryOrderDetails);
+                // var projection = Builders<SecondaryOrder>.Projection.Include(o => o.SecondaryOrderDetails);
 
                 // Retrieve only the nested details
                 //var Details = await secondaryOrderCollection.Find(filter).Project<SecondaryOrder>(projection).ToListAsync();
@@ -95,7 +113,7 @@ namespace DataVisualization.DAL.Repository
                 //{
                 //    DetailsList.AddRange(item.SecondaryOrderDetails);
                 //}
-                //var grouped = (from it in Details.
+                //var grouped = (from it in Details
                 //               group it by new
                 //               {
                 //                   it.Product_Id,
@@ -109,6 +127,8 @@ namespace DataVisualization.DAL.Repository
                 //                   Qty = g.Sum(x => x.Qty)
                 //               }).ToList();
                 //return grouped;
+
+                var result = await _secondaryOrderCollections.Find(_ => true).ToListAsync();
                 return result;
             }
             catch (Exception ex)

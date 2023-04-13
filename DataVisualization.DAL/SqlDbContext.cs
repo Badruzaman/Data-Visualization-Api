@@ -16,6 +16,6 @@ namespace DataVisualization.DAL
         {
 
         }
-        public DbSet<SecondaryOrderDto> SecondaryOrderDto { get; set; }
+        public DbSet<SecondaryOrderCollections> SecondaryOrderCollections { get; set; }
     }
 }

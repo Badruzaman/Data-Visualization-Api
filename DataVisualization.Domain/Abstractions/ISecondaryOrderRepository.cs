@@ -12,6 +12,6 @@ namespace DataVisualization.Domain.Abstractions
     {
         Task<bool> MigrateSqlToNoSql();
         Task<SecondaryOrder> Add(SecondaryOrder secondaryOrder);
-        Task<List<SecondaryOrder>> GetAll();
+        Task<List<SecondaryOrderCollections>> GetAll();
     }
 }
