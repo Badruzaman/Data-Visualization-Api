@@ -3,12 +3,7 @@ using DataVisualization.Domain.Abstractions;
 using DataVisualization.Domain.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using MongoDB.Bson;
-using MongoDB.Driver.Linq;
-using System.Linq;
-using DataVisualization.Domain.DTOs;
 
 namespace DataVisualization.DAL.Repository
 {
