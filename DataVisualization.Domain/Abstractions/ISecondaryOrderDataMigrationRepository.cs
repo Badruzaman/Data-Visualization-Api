@@ -8,11 +8,8 @@ using System.Threading.Tasks;
 
 namespace DataVisualization.Domain.Abstractions
 {
-    public interface ISecondaryOrderService
+    public interface ISecondaryOrderDataMigrationRepository
     {
-        Task<SecondaryOrder> Add(SecondaryOrder secondaryOrder);
-        Task<List<SecondaryOrderCollections>> GetAll();
-        Task<List<SecondaryOrder>> GetAllv1();
-
+        Task<bool> MigrateSqlToNoSql();
     }
 }

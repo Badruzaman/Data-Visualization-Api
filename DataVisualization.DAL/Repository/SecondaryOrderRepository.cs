@@ -1,14 +1,10 @@
-﻿using DataVisualization.Domain.Configuration;
+﻿
 using DataVisualization.Domain.Abstractions;
 using DataVisualization.Domain.Models;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
-using MongoDB.Bson;
 using MongoDB.Driver.Linq;
-using System.Linq;
-using DataVisualization.Domain.DTOs;
+using MongoDB.Driver;
+
+
 
 namespace DataVisualization.DAL.Repository
 {
@@ -16,47 +12,14 @@ namespace DataVisualization.DAL.Repository
     {
         private readonly SqlDbContext _dbContext;
         private readonly IMongoCollection<SecondaryOrderCollections> _secondaryOrderCollections;
+        private readonly IMongoCollection<SecondaryOrder> _secondaryOrder;
         public SecondaryOrderRepository(SqlDbContext dbContext, MongoDbContext mongoDbContext)
         {
             this._dbContext = dbContext;
             this._secondaryOrderCollections = mongoDbContext.GetCollection<SecondaryOrderCollections>("SecondaryOrderCollections");
+            this._secondaryOrder = mongoDbContext.GetCollection<SecondaryOrder>("SecondaryOrder");
         }
-        public async Task<bool> MigrateSqlToNoSql()
-        {
-            try
-            {
-                //Raw sql
-                //string sql = "select top 100 Id,Code,OrderDate from SecondaryOrders order by Id desc";
-                //var result = await _Context.Set<SecondaryOrder>().FromSqlRaw(sql).ToListAsync();
-
-                //Raw Stored Procedure
-                var result = await _dbContext.SecondaryOrderCollections.FromSqlRaw("SprGetSecondaryOrder @param1, @param2", new SqlParameter("@param1", 1), new SqlParameter("@param2", 2)).AsNoTracking().ToListAsync();
-                //var groupedData = from it in result
-                //                  group it
-                //                  by new
-                //                  {
-                //                      it.Code,
-                //                      it.OrderDate
-                //                  } into g
-                //                  select new SecondaryOrder
-                //                  {
-                //                      Code = g.Key.Code,
-                //                      OrderDate = g.Key.OrderDate,
-                //                      SecondaryOrderDetails = g.Select(_it => new SecondaryOrderDetail
-                //                      {
-                //                          Product_Id = _it.Product_Id,
-                //                          Name = _it.Name,
-                //                          Qty = _it.Qty
-                //                      })
-                //                  };
-                await _secondaryOrderCollections.InsertManyAsync(result);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
+       
 
         public async Task<SecondaryOrder> Add(SecondaryOrder secondaryOrder)
         {
@@ -128,7 +91,26 @@ namespace DataVisualization.DAL.Repository
                 //               }).ToList();
                 //return grouped;
 
-                var result = await _secondaryOrderCollections.Find(_ => true).ToListAsync();
+                //var result1 = await _secondaryOrderCollections.Find(_ => true).ToListAsync();
+                var result = await (from order in _secondaryOrderCollections.AsQueryable<SecondaryOrderCollections>()
+                             where order.Product_Id == 46474
+                             select order).ToListAsync();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<SecondaryOrder>> GetAllv1()
+        {
+            try
+            {
+                var query = from order in _secondaryOrder.AsQueryable<SecondaryOrder>()
+                            where order.SecondaryOrderDetails.Any(_it => _it.Product_Id == 46474)
+                            select order;
+                var result = query.ToList();
                 return result;
             }
             catch (Exception ex)

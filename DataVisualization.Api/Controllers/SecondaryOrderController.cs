@@ -15,13 +15,7 @@ namespace DataVisualization.Api.Controllers
         {
             this._secondaryOrderService = secondaryOrderService;
         }
-
-        [HttpGet("MigrateSqlToNoSql")]
-        public async Task<bool> MigrateSqlToNoSql()
-        {
-            var result = await _secondaryOrderService.MigrateSqlToNoSql();
-            return result;
-        }
+       
         [HttpPost]
         public async Task<SecondaryOrder> add(SecondaryOrder secondaryOrder)
         {
@@ -35,11 +29,11 @@ namespace DataVisualization.Api.Controllers
             return result;
         }
 
-        //[HttpGet("GetByProductId")]
-        //public async Task<List<SecondaryOrder>> GetByProductId()
-        //{
-        //    var result = await _secondaryOrderService.GetAll();
-        //    return result;
-        //}
+        [HttpGet("GetAllv1")]
+        public async Task<List<SecondaryOrder>> GetAllv1()
+        {
+            var result = await _secondaryOrderService.GetAllv1();
+            return result;
+        }
     }
 }

@@ -16,10 +16,7 @@ namespace DataVisualization.Service.Services
         {
             this._secondaryOrderRepository = secondaryOrderRepository;
         }
-        public async Task<bool> MigrateSqlToNoSql()
-        {
-          return await _secondaryOrderRepository.MigrateSqlToNoSql();
-        }
+       
         public async Task<SecondaryOrder> Add(SecondaryOrder secondaryOrder)
         {
             return await _secondaryOrderRepository.Add(secondaryOrder);
@@ -27,6 +24,10 @@ namespace DataVisualization.Service.Services
         public async Task<List<SecondaryOrderCollections>> GetAll()
         {
             return await _secondaryOrderRepository.GetAll();
+        }
+        public async Task<List<SecondaryOrder>> GetAllv1()
+        {
+            return await _secondaryOrderRepository.GetAllv1();
         }
     }
 }

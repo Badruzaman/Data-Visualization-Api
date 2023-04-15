@@ -10,8 +10,8 @@ namespace DataVisualization.Domain.Abstractions
 {
     public interface ISecondaryOrderRepository
     {
-        Task<bool> MigrateSqlToNoSql();
         Task<SecondaryOrder> Add(SecondaryOrder secondaryOrder);
         Task<List<SecondaryOrderCollections>> GetAll();
+        Task<List<SecondaryOrder>> GetAllv1();
     }
 }
