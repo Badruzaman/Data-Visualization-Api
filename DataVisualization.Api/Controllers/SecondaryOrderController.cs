@@ -17,9 +17,9 @@ namespace DataVisualization.Api.Controllers
         }
        
         [HttpPost]
-        public async Task<SecondaryOrder> add(SecondaryOrder secondaryOrder)
+        public async Task<SecondaryOrderCollections> add(SecondaryOrderCollections secondaryOrderCollection)
         {
-            var result = await _secondaryOrderService.Add(secondaryOrder);
+            var result = await _secondaryOrderService.Add(secondaryOrderCollection);
             return result;
         }
         [HttpGet("GetAll")]

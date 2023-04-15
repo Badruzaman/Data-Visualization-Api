@@ -10,7 +10,7 @@ namespace DataVisualization.Domain.Abstractions
 {
     public interface ISecondaryOrderService
     {
-        Task<SecondaryOrder> Add(SecondaryOrder secondaryOrder);
+        Task<SecondaryOrderCollections> Add(SecondaryOrderCollections secondaryOrderCollections);
         Task<List<SecondaryOrderCollections>> GetAll();
         Task<List<SecondaryOrder>> GetAllv1();
 

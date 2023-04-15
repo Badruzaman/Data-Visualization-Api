@@ -17,12 +17,12 @@ namespace DataVisualization.DAL.Repository
             this._secondaryOrderCollections = mongoDbContext.GetCollection<SecondaryOrderCollections>("SecondaryOrderCollections");
             this._secondaryOrder = mongoDbContext.GetCollection<SecondaryOrder>("SecondaryOrder");
         }
-        public async Task<SecondaryOrder> Add(SecondaryOrder secondaryOrder)
+        public async Task<SecondaryOrderCollections> Add(SecondaryOrderCollections secondaryOrderCollection)
         {
             try
             {
-                //await SecondaryOrderCollection.InsertOneAsync(secondaryOrder);
-                return secondaryOrder;
+                await _secondaryOrderCollections.InsertOneAsync(secondaryOrderCollection);
+                return secondaryOrderCollection;
             }
             catch (Exception ex)
             {
