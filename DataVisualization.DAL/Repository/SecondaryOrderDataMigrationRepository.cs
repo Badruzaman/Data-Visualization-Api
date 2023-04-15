@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DataVisualization.DAL.Repository
 {
-    public class SecondaryOrderDataMigrationRepository 
+    public class SecondaryOrderDataMigrationRepository : ISecondaryOrderDataMigrationRepository
     {
         private readonly SqlDbContext _dbContext;
         private readonly IMongoCollection<SecondaryOrderCollections> _secondaryOrderCollections;

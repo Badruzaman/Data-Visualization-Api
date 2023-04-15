@@ -23,6 +23,8 @@ builder.Services.AddSingleton<MongoDbContext>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<ISecondaryOrderRepository, SecondaryOrderRepository>();
 builder.Services.AddScoped<ISecondaryOrderService, SecondaryOrderService>();
+builder.Services.AddScoped<ISecondaryOrderDataMigrationService, SecondaryOrderDataMigrationService>();
+builder.Services.AddScoped<ISecondaryOrderDataMigrationRepository, SecondaryOrderDataMigrationRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
