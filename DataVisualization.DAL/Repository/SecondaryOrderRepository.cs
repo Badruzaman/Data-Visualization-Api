@@ -9,17 +9,14 @@ namespace DataVisualization.DAL.Repository
 {
     public class SecondaryOrderRepository : ISecondaryOrderRepository
     {
-        private readonly SqlDbContext _dbContext;
+        
         private readonly IMongoCollection<SecondaryOrderCollections> _secondaryOrderCollections;
         private readonly IMongoCollection<SecondaryOrder> _secondaryOrder;
-        public SecondaryOrderRepository(SqlDbContext dbContext, MongoDbContext mongoDbContext)
+        public SecondaryOrderRepository(MongoDbContext mongoDbContext)
         {
-            this._dbContext = dbContext;
             this._secondaryOrderCollections = mongoDbContext.GetCollection<SecondaryOrderCollections>("SecondaryOrderCollections");
             this._secondaryOrder = mongoDbContext.GetCollection<SecondaryOrder>("SecondaryOrder");
         }
-       
-
         public async Task<SecondaryOrder> Add(SecondaryOrder secondaryOrder)
         {
             try
