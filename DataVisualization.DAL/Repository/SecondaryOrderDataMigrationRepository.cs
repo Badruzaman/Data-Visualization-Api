@@ -13,11 +13,11 @@ namespace DataVisualization.DAL.Repository
 {
     public class SecondaryOrderDataMigrationRepository : ISecondaryOrderDataMigrationRepository
     {
-        private readonly SqlDbContext _dbContext;
+        private readonly SqlDbContext _sqlDbContext;
         private readonly IMongoCollection<SecondaryOrderCollections> _secondaryOrderCollections;
-        public SecondaryOrderDataMigrationRepository(SqlDbContext dbContext, MongoDbContext mongoDbContext)
+        public SecondaryOrderDataMigrationRepository(SqlDbContext sqlDbContext, MongoDbContext mongoDbContext)
         {
-            this._dbContext = dbContext;
+            this._sqlDbContext = sqlDbContext;
             this._secondaryOrderCollections = mongoDbContext.GetCollection<SecondaryOrderCollections>("SecondaryOrderCollections");
         }
         public async Task<bool> MigrateSqlToNoSql()
@@ -29,7 +29,7 @@ namespace DataVisualization.DAL.Repository
                 //var result = await _Context.Set<SecondaryOrder>().FromSqlRaw(sql).ToListAsync();
 
                 //Raw Stored Procedure
-                var result = await _dbContext.SecondaryOrderCollections.FromSqlRaw("SprGetSecondaryOrder @param1, @param2", new SqlParameter("@param1", 1), new SqlParameter("@param2", 2)).AsNoTracking().ToListAsync();
+                var result = await _sqlDbContext.SecondaryOrderCollections.FromSqlRaw("SprGetSecondaryOrder @param1, @param2", new SqlParameter("@param1", 1), new SqlParameter("@param2", 2)).AsNoTracking().ToListAsync();
                 //var groupedData = from it in result
                 //                  group it
                 //                  by new
