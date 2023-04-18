@@ -12,7 +12,7 @@ namespace DataVisualization.Domain.Abstractions
     {
         Task<SecondaryOrderCollections> Add(SecondaryOrderCollections secondaryOrderCollections);
         Task<List<SecondaryOrderCollections>> GetAll();
-        Task<List<SecondaryOrder>> GetAllv1();
+        Task<IEnumerable<SecondaryOrderDetail>> GetAllv1();
 
     }
 }

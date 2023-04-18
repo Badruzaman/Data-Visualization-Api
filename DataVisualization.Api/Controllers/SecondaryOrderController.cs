@@ -15,7 +15,7 @@ namespace DataVisualization.Api.Controllers
         {
             this._secondaryOrderService = secondaryOrderService;
         }
-       
+
         [HttpPost]
         public async Task<SecondaryOrderCollections> add(SecondaryOrderCollections secondaryOrderCollection)
         {
@@ -25,12 +25,19 @@ namespace DataVisualization.Api.Controllers
         [HttpGet("GetAll")]
         public async Task<List<SecondaryOrderCollections>> GetAll()
         {
-            var result = await _secondaryOrderService.GetAll();
-            return result;
+            try
+            {
+                var result = await _secondaryOrderService.GetAll();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         [HttpGet("GetAllv1")]
-        public async Task<List<SecondaryOrder>> GetAllv1()
+        public async Task<IEnumerable<SecondaryOrderDetail>> GetAllv1()
         {
             var result = await _secondaryOrderService.GetAllv1();
             return result;
