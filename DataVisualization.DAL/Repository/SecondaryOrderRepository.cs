@@ -83,9 +83,10 @@ namespace DataVisualization.DAL.Repository
                 //             }
                 //             };
 
+                decimal product_id = 46474;
                 var master = await _secondaryOrder.AsQueryable<SecondaryOrder>()
-                    .Where(o => o.SecondaryOrderDetails.Any(od => od.Product_Id == 46474)).ToListAsync();
-                var result =  master.SelectMany(o => o.SecondaryOrderDetails).Where(it=>it.Product_Id == 46474);
+                    .Where(detail => detail.SecondaryOrderDetails.Any(it => it.Product_Id == product_id)).ToListAsync();
+                var result = master.SelectMany(it => it.SecondaryOrderDetails).Where(it => it.Product_Id == product_id);
                 return result;
             }
             catch (Exception ex)
