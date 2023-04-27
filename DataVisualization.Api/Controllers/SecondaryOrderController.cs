@@ -37,7 +37,7 @@ namespace DataVisualization.Api.Controllers
         }
 
         [HttpGet("GetAllv1")]
-        public async Task<IEnumerable<SecondaryOrderDetail>> GetAllv1()
+        public async Task<IEnumerable<SecondaryOrder>> GetAllv1()
         {
             var result = await _secondaryOrderService.GetAllv1();
             return result;

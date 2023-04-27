@@ -46,7 +46,7 @@ namespace DataVisualization.DAL.Repository
             }
         }
 
-        public async Task<IEnumerable<SecondaryOrderDetail>> GetAllv1()
+        public async Task<IEnumerable<SecondaryOrder>> GetAllv1()
         {
             try
             {
@@ -83,10 +83,13 @@ namespace DataVisualization.DAL.Repository
                 //             }
                 //             };
 
-                decimal product_id = 46474;
-                var master = await _secondaryOrder.AsQueryable<SecondaryOrder>()
-                    .Where(detail => detail.SecondaryOrderDetails.Any(it => it.Product_Id == product_id)).ToListAsync();
-                var result = master.SelectMany(it => it.SecondaryOrderDetails).Where(it => it.Product_Id == product_id);
+                //decimal product_id = 46474;
+                //var master = await _secondaryOrder.AsQueryable<SecondaryOrder>()
+                //    .Where(detail => detail.SecondaryOrderDetails.Any(it => it.Product_Id == product_id)).ToListAsync();
+                //var result = master.SelectMany(it => it.SecondaryOrderDetails).Where(it => it.Product_Id == product_id);
+                //return result;
+                var result = await (from order in _secondaryOrder.AsQueryable<SecondaryOrder>()
+                                    select order).Take(500).ToListAsync();
                 return result;
             }
             catch (Exception ex)
