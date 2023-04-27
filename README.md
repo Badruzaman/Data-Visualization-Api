@@ -8,6 +8,7 @@ This is a .net core web api application that replicates MS Sql Data to MongoDB d
 + MS .Net Core Web Api (.NET 7.0)
 + Entity Framework Core
 + Linq
++ Store Procedure
 
 ## Project Architecture 
 ![Architecture](/DataVisualization.Api/images/ProjectView.PNG)
