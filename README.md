@@ -7,6 +7,7 @@ This is a .net core web api application that replicates MS Sql Data to MongoDB d
 + Microsoft Visual Studio Enterprise 2022
 + MS .Net Core Web Api (.NET 7.0)
 + Entity Framework Core
++ Linq
 
 ## Project Architecture 
 ![Architecture](/DataVisualization.Api/images/ProjectView.PNG)
