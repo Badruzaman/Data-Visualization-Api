@@ -5,8 +5,6 @@ The application includes a data migration component that retrieves data from MS 
 
 Once the data is migrated to MongoDB, the web API component allows for easy sharing of data with different applications. The API can be used to query the data, filter and sort the results, and expose the data in a format that is easy to consume by other applications.
 
-The web API can be accessed by different applications, such as web and mobile applications, using standard HTTP requests. The API supports common HTTP methods, such as GET, POST, PUT, and DELETE, to perform CRUD (Create, Read, Update, Delete) operations on the data.
-
 ## Tools and Technology 
 + Microsoft SQL Server
 + MongoDB
