@@ -1,5 +1,5 @@
 ## Data Visualization Api
-This is a .net core web api application that replicates MS Sql Data to MongoDB database for analytics and visualization purpose
+This is a .net core web api application that replicates MS Sql Data to MongoDB database for analytics and visualization.
 
 ## Tools and Technology 
 + Microsoft SQL Server
