@@ -1,4 +1,4 @@
-## Data Visualization Api
+## Application Description
 This .NET Core web API application is designed to replicate data from MS SQL to MongoDB for analytics and visualization purposes. By leveraging the scalability and performance of MongoDB, the application can provide fast and reliable data access for web and mobile applications.
 
 The application includes a data migration component that retrieves data from MS SQL and maps it to a MongoDB database, using a predefined schema. This migration process can be scheduled or triggered on demand, depending on the specific use case.
